@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: spring-boot-app
+  namespace: spring-boot
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: spring-boot-app
+
+  template:
+    metadata:
+      labels:
+        app: spring-boot-app
+
+    spec:
+      containers:
+        - name: spring-boot-app
+          image: spring-boot-crud:v1
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 9191
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9191
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9191
+            initialDelaySeconds: 10
+            periodSeconds: 5

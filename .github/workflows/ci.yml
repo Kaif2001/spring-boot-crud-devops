@@ -1,4 +1,4 @@
-name: Spring Boot CI
+name: Spring Boot CI/CD
 
 on:
   push:
@@ -28,8 +28,17 @@ jobs:
           java-version: '11'
           cache: maven
 
-      - name: Build Project
+      - name: Build Spring Boot Project
         run: mvn clean package -DskipTests
 
       - name: Build Docker Image
-        run: docker build -t spring-boot-crud:v1 .
+        run: docker build -t kaif3108/spring-boot-crud:v2.0.0 .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker Image
+        run: docker push kaif3108/spring-boot-crud:v2.0.0

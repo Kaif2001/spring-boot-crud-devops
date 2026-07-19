@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -33,8 +34,31 @@ public class ProductService {
         return repository.findByName(name);
     }
 
-    public List<Product> searchProducts(String keyword) {
-        return repository.findByNameContainingIgnoreCase(keyword);
+    // Version 2.0 Search
+    public List<Product> searchProducts(String keyword,
+                                        Double minPrice,
+                                        Double maxPrice) {
+
+        List<Product> products =
+                repository.findByNameContainingIgnoreCase(keyword);
+
+        if (minPrice != null) {
+            products = products.stream()
+                    .filter(p -> p.getPrice() >= minPrice)
+                    .collect(Collectors.toList());
+        }
+
+        if (maxPrice != null) {
+            products = products.stream()
+                    .filter(p -> p.getPrice() <= maxPrice)
+                    .collect(Collectors.toList());
+        }
+
+        if (products.isEmpty()) {
+            throw new RuntimeException("No products found.");
+        }
+
+        return products;
     }
 
     public String deleteProduct(int id) {

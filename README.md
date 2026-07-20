@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is a Spring Boot REST API for Product Catalogue Management. It demonstrates complete DevOps practices including Docker containerization, Kubernetes deployment, Git versioning, CI/CD automation, and documentation.
+This project is a Spring Boot REST API for Product Catalogue Management. It demonstrates complete DevOps practices including Docker containerization, Kubernetes deployment, Git versioning, GitHub Actions CI/CD automation, and documentation.
 
 ---
 
@@ -30,8 +30,8 @@ This project is a Spring Boot REST API for Product Catalogue Management. It demo
 - Input Validation
 - Docker Multi-stage Build
 - Kubernetes Deployment
-- Horizontal Pod Autoscaler
-- Ingress Routing
+- Horizontal Pod Autoscaler (HPA)
+- NGINX Ingress Routing
 - Git Versioning
 
 ---
@@ -42,16 +42,41 @@ This project is a Spring Boot REST API for Product Catalogue Management. It demo
 spring-boot-crud-example
 │
 ├── src
+├── .github
+│   └── workflows
+│       └── ci.yml
+│
 ├── k8s
 │   ├── deployment.yaml
 │   ├── service.yaml
+│   ├── namespace.yaml
 │   ├── ingress.yaml
 │   ├── hpa.yaml
-│   └── namespace.yaml
+│   │
+│   ├── product-v1
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   │   ├── namespace.yaml
+│   │   ├── ingress.yaml
+│   │   └── hpa.yaml
+│   │
+│   ├── product-v1-1
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   │   ├── namespace.yaml
+│   │   ├── ingress.yaml
+│   │   └── hpa.yaml
+│   │
+│   └── product-v2
+│       ├── deployment.yaml
+│       ├── service.yaml
+│       ├── namespace.yaml
+│       ├── ingress.yaml
+│       └── hpa.yaml
 │
 ├── Dockerfile
-├── README.md
 ├── CHANGELOG.md
+├── README.md
 ├── SYSTEM_DESIGN.md
 └── pom.xml
 ```
@@ -66,15 +91,11 @@ spring-boot-crud-example
 GET /health
 ```
 
----
-
 ## Get All Products
 
 ```
 GET /products
 ```
-
----
 
 ## Get Product By ID
 
@@ -82,23 +103,17 @@ GET /products
 GET /product/{id}
 ```
 
----
-
 ## Add Product
 
 ```
 POST /addProduct
 ```
 
----
-
 ## Update Product
 
 ```
 PUT /update
 ```
-
----
 
 ## Delete Product
 
@@ -108,15 +123,15 @@ DELETE /delete/{id}
 
 ---
 
-## Search Product
+# Product Search
 
-Version 1.1
+## Version 1.1
 
 ```
 GET /products/search?keyword=laptop
 ```
 
-Version 2.0
+## Version 2.0
 
 ```
 GET /products/search?keyword=laptop&minPrice=1000&maxPrice=50000
@@ -124,110 +139,77 @@ GET /products/search?keyword=laptop&minPrice=1000&maxPrice=50000
 
 ---
 
-# Local Setup
+# Git Versions
 
-Clone Repository
-
-```bash
-git clone https://github.com/Kaif2001/spring-boot-crud-devops.git
-```
-
-Go to Project
-
-```bash
-cd spring-boot-crud-example
-```
-
-Run
-
-```bash
-mvn spring-boot:run
-```
-
-Application
-
-```
-http://localhost:9191
-```
+| Version | Description |
+|----------|-------------|
+| v1.0.0 | Basic CRUD + Health API |
+| v1.1.0 | Product Search |
+| v2.0.0 | Advanced Search + Validation + Exception Handling |
 
 ---
 
 # Docker
 
-Build
+Build Image
 
 ```bash
-docker build -t spring-boot-crud:v1 .
+docker build -t kaif3108/spring-boot-crud:v2.0.0 .
 ```
 
-Run
+Run Container
 
 ```bash
-docker run -p 9191:9191 spring-boot-crud:v1
-```
-
----
-
-# Kubernetes
-
-Create Namespace
-
-```bash
-kubectl apply -f k8s/namespace.yaml
-```
-
-Deploy Application
-
-```bash
-kubectl apply -f k8s/deployment.yaml
-```
-
-Create Service
-
-```bash
-kubectl apply -f k8s/service.yaml
-```
-
-Create HPA
-
-```bash
-kubectl apply -f k8s/hpa.yaml
-```
-
-Create Ingress
-
-```bash
-kubectl apply -f k8s/ingress.yaml
+docker run -p 9191:9191 kaif3108/spring-boot-crud:v2.0.0
 ```
 
 ---
 
-# Verify Deployment
+# Kubernetes Deployment
+
+## Version 1
 
 ```bash
-kubectl get all -n spring-boot
+kubectl apply -f k8s/product-v1/
+```
+
+## Version 1.1
+
+```bash
+kubectl apply -f k8s/product-v1-1/
+```
+
+## Version 2
+
+```bash
+kubectl apply -f k8s/product-v2/
+```
+
+---
+
+# Verify Resources
+
+```bash
+kubectl get pods --all-namespaces
+kubectl get deployments --all-namespaces
+kubectl get svc --all-namespaces
+kubectl get ingress --all-namespaces
+kubectl get hpa --all-namespaces
 ```
 
 ---
 
 # CI/CD
 
-GitHub Actions pipeline performs:
+GitHub Actions automatically performs:
 
-- Build
-- Test
-- Docker Image Build
-- Kubernetes Deployment (if configured)
-
----
-
-# Logging
-
-Spring Boot logs can be viewed using:
-
-```bash
-kubectl logs <pod-name> -n spring-boot
-```
+- Checkout Repository
+- Run Maven Tests
+- Build Project
+- Build Docker Image
+- Push Docker Image to Docker Hub
+- Kubernetes Deployment Placeholder
+- Post Deployment Health Check Placeholder
 
 ---
 
@@ -236,26 +218,69 @@ kubectl logs <pod-name> -n spring-boot
 Health Endpoint
 
 ```
-/health
+GET /health
 ```
 
-Kubernetes uses
+Kubernetes Monitoring
 
 - Readiness Probe
 - Liveness Probe
+- Horizontal Pod Autoscaler
 
 ---
 
-# Version History
+# Docker Images
 
-| Version | Description |
-|----------|-------------|
-| v1.0.0 | Initial Release |
-| v1.1.0 | Product Search |
-| v2.0.0 | Enhanced Search and Exception Handling |
+Docker Hub Repository
+
+```
+kaif3108/spring-boot-crud
+```
+
+Available Tags
+
+- v1.0.0
+- v1.1.0
+- v2.0.0
+
+---
+
+# Documentation
+
+- README.md
+- CHANGELOG.md
+- SYSTEM_DESIGN.md
 
 ---
 
 # Author
 
-Mohammed Kaif
+**Mohammed Kaif**
+
+---
+
+# Assignment Status
+
+✅ Docker Containerization
+
+✅ Multi-stage Docker Build
+
+✅ Git Versioning
+
+✅ CHANGELOG
+
+✅ GitHub Actions CI/CD
+
+✅ Kubernetes Deployment
+
+✅ Namespace Isolation
+
+✅ HPA
+
+✅ Ingress
+
+✅ Resource Limits
+
+✅ Docker Hub Deployment
+
+✅ Vulnerability Scan

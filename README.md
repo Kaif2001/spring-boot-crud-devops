@@ -253,6 +253,30 @@ Available Tags
 
 ---
 
+# Screenshots
+
+Project execution screenshots are available in the `screenshots` folder.
+
+Included screenshots:
+
+- GitHub Repository
+- GitHub Actions
+- GitHub Tags
+- Docker Hub Images
+- Project Structure
+- Kubernetes Pods
+- Kubernetes Deployments
+- Kubernetes Services
+- Kubernetes Ingress
+- Kubernetes HPA
+- Kubernetes Namespaces
+- Health API
+- Get Products API
+- Search API (Version 1.1)
+- Search API (Version 2.0)
+
+---
+
 # Author
 
 **Mohammed Kaif**

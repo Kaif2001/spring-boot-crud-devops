@@ -2,26 +2,26 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: spring-boot-app
-  namespace: spring-boot
+  name: spring-boot-v1
+  namespace: product-v1
 
 spec:
-  replicas: 2
+  replicas: 1
 
   selector:
     matchLabels:
-      app: spring-boot-app
+      app: spring-boot-v1
 
   template:
     metadata:
       labels:
-        app: spring-boot-app
+        app: spring-boot-v1
 
     spec:
       containers:
-        - name: spring-boot-app
-          image: spring-boot-crud:v1
-          imagePullPolicy: Never
+        - name: spring-boot-v1
+          image: kaif3108/spring-boot-crud:v2.0.0
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 9191
@@ -29,7 +29,8 @@ spec:
           resources:
             requests:
               cpu: "100m"
-              memory: "128Mi"
+              memory: "256Mi"
+
             limits:
               cpu: "500m"
               memory: "512Mi"
@@ -38,16 +39,16 @@ spec:
             httpGet:
               path: /health
               port: 9191
-            initialDelaySeconds: 30
+            initialDelaySeconds: 90
             periodSeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 5
             failureThreshold: 6
 
           livenessProbe:
             httpGet:
               path: /health
               port: 9191
-            initialDelaySeconds: 60
+            initialDelaySeconds: 120
             periodSeconds: 15
-            timeoutSeconds: 2
-            failureThreshold: 3
+            timeoutSeconds: 5
+            failureThreshold: 6

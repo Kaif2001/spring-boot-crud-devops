@@ -38,7 +38,7 @@ This project is a Spring Boot REST API for Product Catalogue Management. It demo
 
 # Project Structure
 
-
+```
 spring-boot-crud-example
 │
 ├── .github
@@ -88,6 +88,7 @@ spring-boot-crud-example
 ├── SYSTEM_DESIGN.md
 ├── pom.xml
 └── .gitignore
+```
 
 ---
 

@@ -38,10 +38,9 @@ This project is a Spring Boot REST API for Product Catalogue Management. It demo
 
 # Project Structure
 
-```
+
 spring-boot-crud-example
 │
-├── src
 ├── .github
 │   └── workflows
 │       └── ci.yml
@@ -74,12 +73,21 @@ spring-boot-crud-example
 │       ├── ingress.yaml
 │       └── hpa.yaml
 │
+├── screenshots
+│   ├── 01-github-home.png
+│   ├── 02-github-actions.png
+│   ├── 03-github-tags.png
+│   ├── 04-dockerhub-images.png
+│   ├── ...
+│   └── 15-search-api-v2.png
+│
+├── src
 ├── Dockerfile
 ├── CHANGELOG.md
 ├── README.md
 ├── SYSTEM_DESIGN.md
-└── pom.xml
-```
+├── pom.xml
+└── .gitignore
 
 ---
 
@@ -190,6 +198,7 @@ kubectl apply -f k8s/product-v2/
 # Verify Resources
 
 ```bash
+kubectl get namespaces
 kubectl get pods --all-namespaces
 kubectl get deployments --all-namespaces
 kubectl get svc --all-namespaces

@@ -3,17 +3,35 @@ kind: Ingress
 
 metadata:
   name: spring-boot-ingress
-  namespace: spring-boot
+  namespace: product-v1
 
 spec:
+  ingressClassName: nginx
+
   rules:
-    - host: springboot.local
-      http:
+    - http:
         paths:
-          - path: /
+
+          - path: /v1
             pathType: Prefix
             backend:
               service:
-                name: spring-boot-service
+                name: spring-boot-v1-service
+                port:
+                  number: 9191
+
+          - path: /v1-1
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-boot-v1-1-service
+                port:
+                  number: 9191
+
+          - path: /v2
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-boot-v2-service
                 port:
                   number: 9191

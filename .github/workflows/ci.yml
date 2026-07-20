@@ -12,7 +12,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
 
     runs-on: ubuntu-latest
 
@@ -28,6 +28,9 @@ jobs:
           java-version: '11'
           cache: maven
 
+      - name: Run Unit Tests
+        run: mvn test
+
       - name: Build Spring Boot Project
         run: mvn clean package -DskipTests
 
@@ -42,3 +45,17 @@ jobs:
 
       - name: Push Docker Image
         run: docker push kaif3108/spring-boot-crud:v2.0.0
+
+      - name: Kubernetes Deployment (Placeholder)
+        run: |
+          echo "To deploy automatically, configure a Kubernetes cluster and KUBECONFIG secret."
+          echo "Example:"
+          echo "kubectl apply -f k8s/product-v1/"
+          echo "kubectl apply -f k8s/product-v1-1/"
+          echo "kubectl apply -f k8s/product-v2/"
+
+      - name: Post Deployment Health Check (Placeholder)
+        run: |
+          echo "Integration tests would run here after deployment."
+          echo "Example:"
+          echo "curl http://localhost:9191/health"
